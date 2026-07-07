@@ -4,23 +4,33 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.webkit.GeolocationPermissions;
+import android.webkit.WebResourceError;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class MainActivity extends Activity {
     private static final int LOCATION_PERMISSION_REQUEST = 1001;
+    private static final int MAX_LOAD_RETRY_COUNT = 5;
+    private static final long RETRY_BASE_DELAY_MS = 1500L;
+    private static final long RETRY_MAX_DELAY_MS = 8000L;
 
     private WebView webView;
     private String pendingGeolocationOrigin;
     private GeolocationPermissions.Callback pendingGeolocationCallback;
+    private int loadRetryCount;
+    private boolean mainFrameLoadFailed;
+    private boolean retryScheduled;
+    private String retryTargetUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +159,76 @@ public class MainActivity extends Activity {
 
             startActivity(new Intent(Intent.ACTION_VIEW, uri));
             return true;
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            mainFrameLoadFailed = false;
+
+            if (retryTargetUrl == null || !retryTargetUrl.equals(url)) {
+                loadRetryCount = 0;
+                retryTargetUrl = null;
+                retryScheduled = false;
+            }
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+
+            if (!mainFrameLoadFailed && !retryScheduled) {
+                loadRetryCount = 0;
+                retryTargetUrl = null;
+            }
+        }
+
+        @Override
+        public void onReceivedError(
+            WebView view,
+            WebResourceRequest request,
+            WebResourceError error
+        ) {
+            super.onReceivedError(view, request, error);
+
+            if (request.isForMainFrame()) {
+                mainFrameLoadFailed = true;
+                scheduleRetry(view, request.getUrl().toString());
+            }
+        }
+
+        @Override
+        public void onReceivedHttpError(
+            WebView view,
+            WebResourceRequest request,
+            WebResourceResponse errorResponse
+        ) {
+            super.onReceivedHttpError(view, request, errorResponse);
+
+            if (request.isForMainFrame() && errorResponse.getStatusCode() >= 500) {
+                mainFrameLoadFailed = true;
+                scheduleRetry(view, request.getUrl().toString());
+            }
+        }
+
+        private void scheduleRetry(WebView view, String url) {
+            if (retryScheduled || loadRetryCount >= MAX_LOAD_RETRY_COUNT) {
+                return;
+            }
+
+            retryTargetUrl = url;
+            retryScheduled = true;
+            loadRetryCount += 1;
+
+            long retryDelayMs = Math.min(
+                RETRY_BASE_DELAY_MS * loadRetryCount,
+                RETRY_MAX_DELAY_MS
+            );
+
+            view.postDelayed(() -> {
+                retryScheduled = false;
+                view.loadUrl(url);
+            }, retryDelayMs);
         }
     }
 }
