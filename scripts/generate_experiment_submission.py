@@ -36,6 +36,7 @@ DOCS = {
     "code_inventory": OUTPUT_DIR / "程序代码目录说明.txt",
     "attachment_list": OUTPUT_DIR / "提交材料清单.txt",
     "code_zip": OUTPUT_DIR / "程序代码_山科智行CampusPulse源码.zip",
+    "android_apk": OUTPUT_DIR / "山科智行CampusPulse_Android_Debug.apk",
 }
 
 SCREENSHOTS = {
@@ -1043,7 +1044,7 @@ def create_report_doc_clean(metrics: ProjectMetrics) -> None:
             ["实验名称", f"{PROJECT_NAME} 设计与实现"],
             ["学生信息", "姓名、学号、班级待提交前填写"],
             ["实验主题", "使用高德地图开放平台 API 构建校园步行出行工作台"],
-            ["成果形态", "Web 软件、后端路线服务、设计文档、实验报告、应用截图"],
+            ["成果形态", "Web 软件、后端路线服务、GitHub Pages 站点、Android WebView App、设计文档、实验报告、应用截图"],
         ],
     )
 
@@ -1539,7 +1540,9 @@ def write_code_inventory(metrics: ProjectMetrics) -> None:
         "2. server/src/   Express 后端、导航数据和路线规划服务",
         "3. shared/       前后端共享 TypeScript 类型",
         "4. public/maps/  校园拓扑底图资源",
-        "5. scripts/      报告与交付材料生成脚本",
+        "5. android/      Android WebView 壳应用，加载 GitHub Pages 网址",
+        "6. .github/      Pages 部署与 Android APK 构建工作流",
+        "7. scripts/      报告与交付材料生成脚本",
         "",
         "关键文件：",
         "1. src/routes/HomePage.tsx",
@@ -1579,6 +1582,8 @@ def write_attachment_manifest() -> None:
         DOCS["code_zip"],
         DOCS["code_inventory"],
     ]
+    if DOCS["android_apk"].exists():
+        items.append(DOCS["android_apk"])
     lines = ["提交材料清单", "=" * 16, ""]
     lines.extend(f"- {item.name}" for item in items)
     if APP_SCREENSHOT_DIR.exists():
@@ -1589,8 +1594,14 @@ def write_attachment_manifest() -> None:
     DOCS["attachment_list"].write_text("\n".join(lines), encoding="utf-8")
 
 
+def copy_android_apk() -> None:
+    source = ROOT / "output" / "android" / "app-debug.apk"
+    if source.exists():
+        shutil.copy2(source, DOCS["android_apk"])
+
+
 def zip_source_code() -> None:
-    include_roots = ["src", "server", "shared", "public", "scripts"]
+    include_roots = ["src", "server", "shared", "public", "scripts", "android", ".github"]
     include_files = [
         "package.json",
         "package-lock.json",
@@ -1642,6 +1653,7 @@ def main() -> None:
         convert_docx_to_pdf(DOCS[docx_key], DOCS[pdf_key])
         render_pdf_preview(DOCS[pdf_key], pdf_key.replace("_pdf", "_page"))
     write_code_inventory(metrics)
+    copy_android_apk()
     zip_source_code()
     write_attachment_manifest()
 
