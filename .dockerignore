@@ -1,0 +1,8 @@
+node_modules
+dist
+server/dist
+server-run.log
+*.png
+*.log
+.git
+.github

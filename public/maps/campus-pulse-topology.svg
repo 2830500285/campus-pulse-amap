@@ -1,0 +1,98 @@
+<svg width="1200" height="840" viewBox="0 0 1200 840" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="90" y1="46" x2="1094" y2="780" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F8FBFF" />
+      <stop offset="0.56" stop-color="#EEF5FF" />
+      <stop offset="1" stop-color="#E1ECFF" />
+    </linearGradient>
+    <radialGradient id="glowLeft" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(208 118) rotate(39.8) scale(329 234)">
+      <stop stop-color="#9EC4FF" stop-opacity="0.34" />
+      <stop offset="1" stop-color="#9EC4FF" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="glowRight" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(986 166) rotate(131.7) scale(366 279)">
+      <stop stop-color="#7BB5FF" stop-opacity="0.28" />
+      <stop offset="1" stop-color="#7BB5FF" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="cardStroke" x1="112" y1="124" x2="1062" y2="726" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D7E7FF" />
+      <stop offset="1" stop-color="#C6D9FA" />
+    </linearGradient>
+    <linearGradient id="roadPrimary" x1="130" y1="646" x2="1048" y2="352" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5F93FF" />
+      <stop offset="1" stop-color="#2A66F8" />
+    </linearGradient>
+    <linearGradient id="roadSoft" x1="286" y1="322" x2="988" y2="610" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8FC4FF" />
+      <stop offset="1" stop-color="#66A0FF" />
+    </linearGradient>
+    <filter id="blurOrb" x="0" y="0" width="1200" height="840" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="32" />
+    </filter>
+  </defs>
+
+  <rect width="1200" height="840" rx="42" fill="url(#bg)" />
+  <g opacity="0.9" filter="url(#blurOrb)">
+    <ellipse cx="181" cy="100" rx="154" ry="88" fill="url(#glowLeft)" />
+    <ellipse cx="1001" cy="132" rx="184" ry="114" fill="url(#glowRight)" />
+    <ellipse cx="1015" cy="718" rx="252" ry="92" fill="#DDEBFF" />
+  </g>
+
+  <path
+    d="M-32 738C101 706 160 651 229 619C317 578 401 567 502 597C612 630 709 702 820 723C953 749 1061 710 1230 648"
+    stroke="#D8E8FF"
+    stroke-width="18"
+    stroke-linecap="round"
+    opacity="0.9"
+  />
+  <path
+    d="M-42 774C126 728 214 694 338 689C462 684 563 722 671 742C803 766 930 760 1238 687"
+    stroke="#C8DFFF"
+    stroke-width="10"
+    stroke-linecap="round"
+    opacity="0.88"
+  />
+
+  <rect x="34" y="34" width="1132" height="772" rx="40" fill="rgba(255,255,255,0.56)" stroke="url(#cardStroke)" stroke-width="2.5" />
+  <rect x="58" y="58" width="1084" height="724" rx="32" fill="rgba(255,255,255,0.36)" stroke="#E4EEFF" stroke-width="1.2" />
+
+  <path d="M126 553L196 516L276 494L432 472L597 470L734 520L882 612L964 634" stroke="url(#roadPrimary)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M276 494L320 394L332 322" stroke="url(#roadSoft)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M432 472L510 404L578 340L654 278L744 220" stroke="url(#roadSoft)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M596 470L606 382L610 324" stroke="url(#roadSoft)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0.85" />
+  <path d="M734 520L776 560L844 560" stroke="url(#roadSoft)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M734 520L714 612L700 664" stroke="url(#roadSoft)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M844 560L920 602L978 624L1048 652" stroke="url(#roadSoft)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M844 560L882 646L922 700L996 730L1062 748" stroke="url(#roadSoft)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0.9" />
+
+  <g opacity="0.92">
+    <rect x="88" y="156" width="300" height="240" rx="40" fill="#ECF6FF" stroke="#CAE1FF" stroke-width="2" />
+    <rect x="392" y="144" width="332" height="302" rx="42" fill="#F6FAFF" stroke="#CCE1FF" stroke-width="2" />
+    <rect x="742" y="138" width="324" height="204" rx="40" fill="#EAF5FF" stroke="#C6DEFF" stroke-width="2" />
+    <rect x="736" y="468" width="328" height="228" rx="42" fill="#F4F8FF" stroke="#D2E3FF" stroke-width="2" />
+    <rect x="436" y="566" width="236" height="130" rx="32" fill="#F7FBFF" stroke="#D6E4FB" stroke-width="1.8" />
+  </g>
+
+  <g opacity="0.82">
+    <circle cx="164" cy="218" r="18" fill="#D7E9FF" />
+    <circle cx="676" cy="176" r="22" fill="#DAECFF" />
+    <circle cx="1018" cy="226" r="28" fill="#D8E8FF" />
+    <circle cx="1014" cy="566" r="34" fill="#DEEFFF" />
+    <circle cx="518" cy="626" r="20" fill="#E3F0FF" />
+  </g>
+
+  <rect x="72" y="572" width="126" height="46" rx="23" fill="#17346A" />
+  <text x="135" y="601" text-anchor="middle" fill="#F5FAFF" font-size="24" font-family="'Noto Sans SC', 'Microsoft YaHei', sans-serif" font-weight="700">西门方向</text>
+
+  <rect x="898" y="82" width="136" height="46" rx="23" fill="#17346A" />
+  <text x="966" y="111" text-anchor="middle" fill="#F5FAFF" font-size="24" font-family="'Noto Sans SC', 'Microsoft YaHei', sans-serif" font-weight="700">东门方向</text>
+
+  <text x="126" y="220" fill="#163365" font-size="38" font-family="'Noto Sans SC', 'Microsoft YaHei', sans-serif" font-weight="700">西部门户区</text>
+
+  <text x="430" y="212" fill="#163365" font-size="40" font-family="'Noto Sans SC', 'Microsoft YaHei', sans-serif" font-weight="700">中轴教学区</text>
+
+  <text x="1028" y="206" text-anchor="end" fill="#163365" font-size="38" font-family="'Noto Sans SC', 'Microsoft YaHei', sans-serif" font-weight="700">北侧科研区</text>
+
+  <text x="760" y="678" fill="#163365" font-size="28" font-family="'Noto Sans SC', 'Microsoft YaHei', sans-serif" font-weight="700">南侧生活区</text>
+
+  <text x="470" y="628" fill="#163365" font-size="30" font-family="'Noto Sans SC', 'Microsoft YaHei', sans-serif" font-weight="700">生活联络带</text>
+</svg>

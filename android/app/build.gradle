@@ -1,0 +1,24 @@
+plugins {
+    id 'com.android.application'
+}
+
+def defaultWebAppUrl = providers.gradleProperty('WEB_APP_URL')
+    .getOrElse('https://2830500285.github.io/campus-pulse-amap/#/')
+
+android {
+    namespace 'com.campuspulse.amap'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.campuspulse.amap'
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName '1.0'
+        buildConfigField 'String', 'WEB_APP_URL', "\"${defaultWebAppUrl}\""
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+}
