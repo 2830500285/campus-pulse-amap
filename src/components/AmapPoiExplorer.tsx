@@ -37,6 +37,7 @@ interface AmapNamespace {
 }
 
 const FALLBACK_CENTER: LngLatTuple = [120.12043, 36.001796]
+const CAMPUS_OFFICIAL_NAME = '山东科技大学青岛校区'
 const BLANK_QUERY_RADIUS = 650
 const FILTERED_QUERY_RADIUS = 1200
 const MAX_RESULTS = 12
@@ -208,7 +209,7 @@ export function AmapPoiExplorer({
         searchRef.current = nextSearch
 
         await new Promise<void>((resolve) => {
-          nextSearch.search(campus.name, (status: string, result: AmapPoiResult) => {
+          nextSearch.search(CAMPUS_OFFICIAL_NAME, (status: string, result: AmapPoiResult) => {
             if (status === 'complete' && result?.poiList?.pois?.length) {
               const position = toLngLatTuple(result.poiList.pois[0].location)
               if (position) {

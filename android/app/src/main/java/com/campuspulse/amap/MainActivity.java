@@ -38,6 +38,7 @@ public class MainActivity extends Activity {
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
         settings.setGeolocationEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
@@ -48,6 +49,8 @@ public class MainActivity extends Activity {
 
         webView.setWebViewClient(new CampusPulseWebViewClient());
         webView.setWebChromeClient(new CampusPulseChromeClient());
+        webView.clearCache(true);
+        webView.clearHistory();
         webView.loadUrl(BuildConfig.WEB_APP_URL);
     }
 

@@ -145,7 +145,13 @@ interface LiveNavigationRoute {
 
 const DEFAULT_CENTER: LngLatTuple = [120.12043, 36.001796]
 const DEFAULT_ZOOM = 16
-const CAMPUS_MAX_DISTANCE_METERS = 3200
+const CAMPUS_OFFICIAL_NAME = '山东科技大学青岛校区'
+const CAMPUS_BOUNDS = {
+  west: 120.1085,
+  east: 120.1325,
+  south: 35.993,
+  north: 36.0105,
+}
 const STEP_ADVANCE_DISTANCE_METERS = 30
 const ARRIVAL_DISTANCE_METERS = 25
 const ROUTE_DEVIATION_DISTANCE_METERS = 75
@@ -267,6 +273,8 @@ function distanceToPathMeters(point: LngLatTuple, path: LngLatTuple[]) {
 
 function getCampusQueries(campus: CampusConfig) {
   return [
+    CAMPUS_OFFICIAL_NAME,
+    `${CAMPUS_OFFICIAL_NAME}${campus.city}`,
     campus.name,
     `${campus.name}${campus.city}`,
     `${campus.name} ${campus.city}`,
@@ -274,18 +282,13 @@ function getCampusQueries(campus: CampusConfig) {
   ]
 }
 
-function getPlaceQueries(campus: CampusConfig, place: PlaceRecord) {
-  const candidates = [
-    `${campus.name}${place.name}`,
-    `${campus.name} ${place.name}`,
-    `${place.name}${campus.name}`,
-    `${campus.city}${place.name}`,
-    place.name,
-    ...place.aliases.map((alias) => `${campus.name}${alias}`),
-    ...place.aliases,
-  ]
+function projectCampusMapPoint(place: PlaceRecord): LngLatTuple {
+  const xRatio = Math.min(1, Math.max(0, place.mapPoint.xPct / 100))
+  const yRatio = Math.min(1, Math.max(0, place.mapPoint.yPct / 100))
+  const lng = CAMPUS_BOUNDS.west + (CAMPUS_BOUNDS.east - CAMPUS_BOUNDS.west) * xRatio
+  const lat = CAMPUS_BOUNDS.north - (CAMPUS_BOUNDS.north - CAMPUS_BOUNDS.south) * yRatio
 
-  return Array.from(new Set(candidates.map((value) => value.trim()).filter(Boolean)))
+  return [lng, lat]
 }
 
 function formatDistance(distanceMeters: number) {
@@ -851,19 +854,6 @@ export function AmapLiveMap({
     destinationMarkerRef.current.setMap(map)
   }
 
-  async function searchKeyword(keyword: string) {
-    return await new Promise<AmapPoiRecord[]>((resolve) => {
-      placeSearchRef.current?.search(keyword, (searchStatus: string, result: AmapPoiResult) => {
-        if (searchStatus !== 'complete' || !result?.poiList?.pois?.length) {
-          resolve([])
-          return
-        }
-
-        resolve(result.poiList.pois)
-      })
-    })
-  }
-
   async function resolvePlaceLocation(place: PlaceRecord) {
     const cached = placeCacheRef.current.get(place.id)
 
@@ -871,32 +861,9 @@ export function AmapLiveMap({
       return cached
     }
 
-    for (const query of getPlaceQueries(campus, place)) {
-      const pois = await searchKeyword(query)
-      const candidates = pois
-        .map((poi) => toLngLatTuple(poi.location))
-        .filter((value): value is LngLatTuple => value !== null)
-
-      if (!candidates.length) {
-        continue
-      }
-
-      const nearby = candidates
-        .map((candidate) => ({
-          candidate,
-          distance: haversineDistance(campusCenterRef.current, candidate),
-        }))
-        .sort((left, right) => left.distance - right.distance)
-
-      const bestCandidate =
-        nearby.find((item) => item.distance <= CAMPUS_MAX_DISTANCE_METERS)?.candidate ??
-        candidates[0]
-
-      placeCacheRef.current.set(place.id, bestCandidate)
-      return bestCandidate
-    }
-
-    return null
+    const projectedLocation = projectCampusMapPoint(place)
+    placeCacheRef.current.set(place.id, projectedLocation)
+    return projectedLocation
   }
 
   async function convertRawLocationToAmap(rawLocation: RawBrowserLocation): Promise<BrowserLocation> {
